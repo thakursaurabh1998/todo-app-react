@@ -7,22 +7,19 @@ import { Route } from "react-router-dom";
 
 class App extends Component {
   state = {
-    notes: [
-      {
-        note: "Complete todo with React.",
-        completed: false,
-        editing: true,
-        display: true
-      },
-      {
-        note: "Learn React Fundamentals.",
-        completed: true,
-        editing: false,
-        display: true
-      }
-    ],
+    notes: [],
     toggle: true
   };
+
+  componentDidMount() {
+    if(localStorage && localStorage.getItem('notes'))
+      this.setState({ notes: JSON.parse(localStorage.getItem('notes')) });
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem('notes',JSON.stringify(this.state.notes));
+  }
+
   checkChange = event => {
     this.setState(prevState => {
       let notes = prevState.notes;
@@ -83,6 +80,14 @@ class App extends Component {
     this.completeAll();
   };
 
+  changeEdit = old => {
+    this.setState(prevState => {
+      let notes = prevState.notes;
+      notes[notes.indexOf(old)].editing = !notes[notes.indexOf(old)].editing;
+      return { notes };
+    });
+  };
+
   render() {
     return (
       <div>
@@ -99,6 +104,7 @@ class App extends Component {
                 onCheckChange={this.checkChange}
                 onToggleAll={this.toggleAll}
                 toggle={this.state.toggle}
+                changeEdit={this.changeEdit}
               />
             )}
           />
@@ -107,11 +113,14 @@ class App extends Component {
             path="/active"
             render={() => (
               <List
-                notes={this.state.notes.filter(note=>note.completed===false)}
+                notes={this.state.notes.filter(
+                  note => note.completed === false
+                )}
                 onDestroy={this.destroy}
                 onCheckChange={this.checkChange}
                 onToggleAll={this.toggleAll}
                 toggle={this.state.toggle}
+                changeEdit={this.changeEdit}
               />
             )}
           />
@@ -120,11 +129,12 @@ class App extends Component {
             path="/completed"
             render={() => (
               <List
-                notes={this.state.notes.filter(note=>note.completed===true)}
+                notes={this.state.notes.filter(note => note.completed === true)}
                 onDestroy={this.destroy}
                 onCheckChange={this.checkChange}
                 onToggleAll={this.toggleAll}
                 toggle={this.state.toggle}
+                changeEdit={this.changeEdit}
               />
             )}
           />
@@ -140,7 +150,7 @@ class App extends Component {
             />
           )}
         </section>
-        
+
         <footer className="info">
           <p>Double-click to edit a todo</p>
           <p>

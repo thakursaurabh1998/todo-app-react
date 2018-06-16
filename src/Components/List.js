@@ -3,7 +3,7 @@ import Todo from "./Todo";
 
 class List extends Component {
   render() {
-    const { onToggleAll, onCheckChange, notes, onDestroy, toggle } = this.props;
+    const { changeEdit, onToggleAll, onCheckChange, notes, onDestroy, toggle } = this.props;
     return (
       <section className="main">
         {notes.length !== 0 && (
@@ -21,18 +21,18 @@ class List extends Component {
         <ul className="todo-list">
           {/* <!-- These are here just to show the structure of the list items -->
 					<!-- List items should get the className `editing` when editing and `completed` when marked as completed --> */}
-          {notes.map(note => {
+          {notes.map((note,index) => {
             return (
-              <li key={note.note} className={note.completed ? "completed" : ""}>
                 <Todo
+                  key={index}
                   note={note.note}
                   completed={note.completed}
                   editing={note.editing}
                   display={note.display}
+                  changeEdit={() => changeEdit(note)}
                   onCheckChange={() => onCheckChange(note)}
                   onDestroy={() => onDestroy(note)}
                 />
-              </li>
             );
           })}
         </ul>
