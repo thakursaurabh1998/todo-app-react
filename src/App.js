@@ -12,12 +12,12 @@ class App extends Component {
   };
 
   componentDidMount() {
-    if(localStorage && localStorage.getItem('notes'))
-      this.setState({ notes: JSON.parse(localStorage.getItem('notes')) });
+    if (localStorage && localStorage.getItem("notes"))
+      this.setState({ notes: JSON.parse(localStorage.getItem("notes")) });
   }
 
   componentDidUpdate() {
-    localStorage.setItem('notes',JSON.stringify(this.state.notes));
+    localStorage.setItem("notes", JSON.stringify(this.state.notes));
   }
 
   checkChange = event => {
@@ -88,6 +88,14 @@ class App extends Component {
     });
   };
 
+  edit = (abc, note) => {
+    this.setState(prevState => {
+      let notes = prevState.notes;
+      notes[notes.indexOf(note)].note = abc;
+      return { notes };
+    });
+  }
+
   render() {
     return (
       <div>
@@ -104,6 +112,7 @@ class App extends Component {
                 onCheckChange={this.checkChange}
                 onToggleAll={this.toggleAll}
                 toggle={this.state.toggle}
+                edit={this.edit}
                 changeEdit={this.changeEdit}
               />
             )}
@@ -121,6 +130,7 @@ class App extends Component {
                 onToggleAll={this.toggleAll}
                 toggle={this.state.toggle}
                 changeEdit={this.changeEdit}
+                edit={this.edit}
               />
             )}
           />
@@ -134,6 +144,7 @@ class App extends Component {
                 onCheckChange={this.checkChange}
                 onToggleAll={this.toggleAll}
                 toggle={this.state.toggle}
+                edit={this.edit}
                 changeEdit={this.changeEdit}
               />
             )}
